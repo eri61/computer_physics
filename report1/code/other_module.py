@@ -19,7 +19,7 @@ def reaching_point(xt, yt, num_exclude_point=10, theta=0):
     # take the mean
     L = (L_over0 + L_under0) / 2
     abs_err = (L_over0 - L_under0) / 2
-    return reaching_point[0], abs_err[0]
+    return L[0], abs_err[0]
     
       
 def plot(results, x:str, y:str, **kwargs):
@@ -41,5 +41,5 @@ def plot(results, x:str, y:str, **kwargs):
     ax.set_aspect('equal')  # plot x and y in an equal scale
     ax.legend(fontsize='x-small')
     # fig.show()
-    fig.savefig("pic/newton_angles.png")
+    # fig.savefig("../pic/newton_angles.png")
 

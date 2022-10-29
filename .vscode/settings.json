@@ -1,0 +1,116 @@
+{
+    // begin Tex settings
+    // ---------- Language ----------
+
+    "[tex]": {
+        // スニペット補完中にも補完を使えるようにする
+        "editor.suggest.snippetsPreventQuickSuggestions": false,
+        // インデント幅を2にする
+        "editor.tabSize": 2
+    },
+
+    "[latex]": {
+        // スニペット補完中にも補完を使えるようにする
+        "editor.suggest.snippetsPreventQuickSuggestions": false,
+        // インデント幅を2にする
+        "editor.tabSize": 2
+    },
+
+    "[bibtex]": {
+        // インデント幅を2にする
+        "editor.tabSize": 2
+    },
+
+    // ---------- LaTeX Workshop ----------
+
+    // 使用パッケージのコマンドや環境の補完を有効にする
+    "latex-workshop.intellisense.package.enabled": true,
+
+    // 生成ファイルを削除するときに対象とするファイル
+    // デフォルト値に "*.synctex.gz" を追加
+    "latex-workshop.latex.clean.fileTypes": [
+        "*.aux",
+        "*.bbl",
+        "*.blg",
+        "*.idx",
+        "*.ind",
+        "*.lof",
+        "*.lot",
+        "*.out",
+        "*.toc",
+        "*.acn",
+        "*.acr",
+        "*.alg",
+        "*.glg",
+        "*.glo",
+        "*.gls",
+        "*.ist",
+        "*.fls",
+        "*.fdb_latexmk",
+        "*.snm",
+        "*.nav",
+        "*.dvi",
+        "*.synctex.gz"
+    ],
+
+    // 生成ファイルを "out" ディレクトリに吐き出す
+    "latex-workshop.latex.outDir": "out",
+    
+    "latex-workshop.view.pdf.viewer": "tab",
+
+//    ビルドのレシピ
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "latexmk",
+            "tools": [
+                "latexmk"
+            ]
+        },
+    ],
+
+    // ビルドのレシピに使われるパーツ
+    "latex-workshop.latex.tools": [
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "-silent",
+                "-outdir=%OUTDIR%",
+                "%DOC%"
+            ],
+        },
+    ],
+    
+    // pythonの自動整形
+    "files.eol": "\n",                          // 改行コードは「LF」
+    "python.linting.enabled": true,             // 文法チェックを行う
+    "python.linting.pylintEnabled": false,      // pylint は使わない
+    "python.linting.flake8Enabled": true,       // 文法チェックにflake8 を使う
+    "python.linting.flake8Args": [              // flake8 の設定
+        "--indent-size=4",
+        "--max-line-length=150"
+    ],
+    "editor.formatOnSave": true,
+    "python.formatting.provider": "autopep8",   // 自動整形に autopep8 を使う
+    "python.formatting.autopep8Args": [         // autopep8 の設定
+        "--indent-size=4",
+        "--max-line-length=150"
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python",
+        "editor.tabSize": 4,                      // インデントレベルは「2」
+        "editor.formatOnSave": true,              // 保存時に自動整形を行う
+        "editor.formatOnPaste": false,            // ペースト時に自動整形を行わない
+        "editor.formatOnType": false,     
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        },                                      // 入力後に自動整形を行わない
+    }, 
+    "python.autoComplete.extraPaths":[
+        "/home/eri61/.local/python3.10/site-packages/", 
+        "/home/eri61/.ve3.10/lib/python3.10/site-packages/"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/eri61/.ve3.10/lib/python3.10/site-packages/"
+    ]
+} 
