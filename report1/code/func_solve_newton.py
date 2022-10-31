@@ -7,12 +7,8 @@ from scipy.integrate import solve_ivp
 import other_module
 
 importlib.reload(other_module)
-from other_module import reaching_point
+from other_module import get_maxL_improve_accuracy, reaching_point
 
-
-def improve_accuracy_L() -> pd.DataFrame:
-
-    return 3
 
 def get_theta_of_maxL(
     theta_range, t_range, n_theta, n_t, bm:float=1, g:float=9.81, v0=100./3.6
@@ -51,15 +47,14 @@ def get_theta_of_maxL(
         xt, _, yt, _ = solve_newton(
             eq_params=(g, bm), X0=X0, t_range=t_range, n_t=n_t
             )
-
         # calculate the maximum distance of achieving
         l, err = reaching_point(xt, yt, num_exclude_point=10, theta=theta)
         L.loc[i, 'theta'], L.loc[i, 'l'], L.loc[i, 'err'] = theta, l, err
     
-    max_L = L['l'].max()
-    max_point = L[L['l'] == max_L]
-
-    return max_point
+    max_4point_L = L.sort_values(by='l', ascending=False).iloc[:4, :]
+    theta, l = max_4point_L[['theta', 'l']].T.values
+    theta_max, max_L = get_maxL_improve_accuracy(theta, l)
+    return theta_max, max_L
     
 
 # Newton equation

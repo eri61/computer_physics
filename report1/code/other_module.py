@@ -1,6 +1,28 @@
+from re import T
+
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.optimize import curve_fit
 
+
+def quadratic_function(x, a, b, c):
+    return a*x**2 + b*x + c
+
+def get_maxL_improve_accuracy(x:np.ndarray, y:np.ndarray, split_num=1000):
+    """2次関数のフィッティングを用いて到達距離最大となる角度thetaを求める。
+
+    Args:
+        x (np.ndarray): 角度theta, 4点程度
+        y (np.ndarray): 到達距離L, 4点程度
+
+    return:
+        theta:float(角度), L:float(到達距離)
+    """
+    popt, _ = curve_fit(quadratic_function, x, y)
+    theta = np.linspace(x.min(), x.max(), split_num)
+    L = quadratic_function(theta, *popt)
+    max_L = L.max()
+    return theta[L == max_L].squeeze(), L[L == max_L].squeeze()
 
 def reaching_point(xt, yt, num_exclude_point=10, theta=0):
     # exclude the origin
@@ -22,24 +44,21 @@ def reaching_point(xt, yt, num_exclude_point=10, theta=0):
     return L[0], abs_err[0]
     
       
-def plot(results, x:str, y:str, **kwargs):
-    fig, ax = plt.subplots()
-    for data in results.T.items():
-        name, val = data
-        r = val.to_dict()
-        _kwargs = dict()
-        if ('label' in kwargs.keys()):
-            _kwargs['label'] = r[kwargs['label']]
-        ax.plot(r[x], r[y], marker='.', markersize=3, **_kwargs)
-    ax.set_xlim(left=0)
-    ax.set_ylim(bottom=0)
+def plot(
+    results:np.ndarray, 
+    xlabel:str, ylabel, 
+    fig=None, ax=None, **kwargs
+    ):
+    x, y = results.values.T
+    plt.plot(x, y, '.', markersize=5, **kwargs)
+    plt.xlim(left=0)
+    plt.ylim(bottom=0)
 
-    assert 'xlabel' in kwargs.keys(), ("xlabel is not specified")
-    assert 'ylabel' in kwargs.keys(), ("ylabel is not specified")
-    ax.set_xlabel(kwargs['xlabel'])
-    ax.set_ylabel(kwargs['ylabel'])
-    ax.set_aspect('equal')  # plot x and y in an equal scale
-    ax.legend(fontsize='x-small')
+    assert xlabel is not None, ("xlabel is not specified")
+    assert ylabel is not None, ("ylabel is not specified")
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.legend(fontsize='x-small')
     # fig.show()
     # fig.savefig("../pic/newton_angles.png")
 
