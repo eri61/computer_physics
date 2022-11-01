@@ -112,5 +112,11 @@
     ],
     "python.analysis.extraPaths": [
         "/home/eri61/.ve3.10/lib/python3.10/site-packages/"
-    ]
+    ],
+    // // markdownのスニペットを有効化
+    // "[markdown]":  {
+    // "editor.wordWrap": "on",
+    // "editor.quickSuggestions": true,
+    // "editor.snippetSuggestions": "top"
+    // }
 } 
