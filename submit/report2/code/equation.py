@@ -17,7 +17,6 @@ def solve_soliton(
 
     # initial condition
     u0 = soliton(x, *params)
-    plt.plot(x, u0)
 
     # differential operators
     op_df1 = make_differential_ops(1, acc, nx, dx)
@@ -67,4 +66,3 @@ def two_soliton(
     u0 = soliton(x, x0, lam)
     u1 = soliton(x, x1, lam1)
     return u0 + u1
-    
