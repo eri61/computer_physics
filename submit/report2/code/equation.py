@@ -5,7 +5,7 @@ from scipy.integrate import solve_ivp
 
 
 def solve_soliton(
-    soliton, params, save_name:str="kdv_solve_ivp",
+    soliton, params=[5., 1], save_name:str="kdv_solve_ivp",
     acc:int=4
     ):
     # x mesh
@@ -45,6 +45,21 @@ def solve_soliton(
     # Save results
     np.savez(f"../out/{save_name}", x=x, t=t, u_tx=u_tx)
 
+def view_solit_t0(path:str):
+    npz = np.load(path)
+    x = npz['x']
+    t = npz['t']
+    ut = npz['u_tx']
+    variable = path.split("/")[-1].split(".")[-2].split("_")
+    plt.plot(x, ut[t==0.].flatten(), label= variable[0] + "=" + variable[1])
+
+def view_solit_t065(path:str):
+    npz = np.load(path)
+    x = npz['x']
+    t = npz['t']
+    ut = npz['u_tx']
+    variable = path.split("/")[-1].split(".")[-2].split("_")
+    plt.plot(x, ut[t==0.65].flatten(), label= variable[0] + "=" + variable[1])
 
 def f_kdv(t, u, df1, df3):
     u_x = df1.dot(u)
