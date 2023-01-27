@@ -1,0 +1,127 @@
+\documentclass[a4j, dvipdfmx]{jarticle}
+\usepackage[hang,small,bf]{caption}
+\usepackage[subrefformat=parens]{subcaption}
+
+\usepackage{amsmath,amssymb}    %数式
+\usepackage{bm}                 %太字ベクトル
+\usepackage{graphicx}           %図の挿入
+\usepackage{here}               %図の[H]を使えるようにする
+\usepackage{ascmac}             %枠を使う
+\usepackage{physics}            %コマンドの略称を用いる
+\usepackage{comment}            %コメントの使用
+\usepackage{enumerate}          %箇条書きを可能に
+\usepackage{url}                %urlの利用
+\usepackage{listings,jvlisting}
+\usepackage[dvipdfmx]{hyperref}
+\pagestyle{empty}
+\begin{document}
+{\Large コンピュータ物理学　3学期レポート2}
+\hskip1zw \hfill
+\underline{ 3年 \hskip2zw 学籍番号:05502231 \hskip2zw 氏名: 松田愛理 \hskip5ex }
+\vspace*{2ex}
+\vspace*{2ex}
+
+\normalsize
+\begin{enumerate}[(1)]
+  \large \item 1ソリトン解
+        \begin{align}
+          u_1(x; x_0, \lambda) = \frac{\lambda}{2\cosh^2 \left[\frac{\sqrt{\lambda}}{2}(x - x_0)\right]} \label{eq_soliton}
+        \end{align}
+        を初期条件とする、KdV方程式の数値計算を実行し、この波の時間発展を議論する。ここでは、パラメータ$x_0$と$\lambda$が変化した時の解の振る舞いを議論する。
+
+        結果のコードは\href{https://github.com/eri61/computer_physics/blob/14950abad1236061aca284cfe7e84c19b70c081b/submit/report2/code/report2_pr1.ipynb}{report2\_pr1.ipynb(クリック)}に記載した。
+        \vspace{2ex}
+
+        まず、初期値$x_0$について、初期値を$x_0=2, 4, 6$と変化させ結果の考察を行った。結果は下記の通りである。
+        \begin{figure}[htbp]
+          \begin{minipage}[b]{0.5\hsize}
+            \centering
+            \includegraphics[width=8cm]{../report2/code/pic/init_u1_change_x0.png}
+            \subcaption{初期状態}
+            \label{init}
+          \end{minipage}
+          \begin{minipage}[b]{0.5\hsize}
+            \centering
+            \includegraphics[width=8cm]{../report2/code/pic/t65_u1_change_x0.png}
+            \subcaption{$t=0.65$の時の状態}
+            \label{}
+          \end{minipage}
+          \caption{$x_0$を変化させたときの波の変化}
+        \end{figure}
+
+        また、$\lambda = 2.0$について、時間発展後の波が一部ノイズを含んでいるが、これは初期状態で波が一部欠損してしまっているためである。実際に、$x_0=10, 12, 15$など初期状態が欠損した波では時間発展後規則性がなく振動する波となっている。
+        \begin{figure}[H]
+          \begin{minipage}[b]{0.5\hsize}
+            \centering
+            \includegraphics[width=8cm]{../report2/code/pic/t0_u1_change_x0__.png}
+            \subcaption{初期状態}
+            \label{}
+          \end{minipage}
+          \begin{minipage}[b]{0.5\hsize}
+            \centering
+            \includegraphics[width=8cm]{../report2/code/pic/t065_u1_change_x0__.png}
+            \subcaption{$t=0.65$の時の状態}
+            \label{}
+          \end{minipage}
+          \caption{初期状態で波が一部欠損している場合の時間発展}
+        \end{figure}
+
+        つぎに$\lambda$を変化させたときの変化について考察する。$x_0$の時と同様にまず初期状態と$t=0.65$の2つの状態について出力を行った。結果は以下の通りとなった。
+        \begin{figure}[H]
+          \begin{minipage}[b]{0.5\hsize}
+            \centering
+            \includegraphics[width=8cm]{../report2/code/pic/t0_u1_change_lambda.png}
+            \subcaption{初期状態}
+            \label{}
+          \end{minipage}
+          \begin{minipage}[b]{0.5\hsize}
+            \centering
+            \includegraphics[width=8cm]{../report2/code/pic/t065_u1_change_lambda.png}
+            \subcaption{}
+            \label{}
+          \end{minipage}
+          \caption{$\lambda$を変化させたときの$t=0$と$t=0.65$の時の分布}
+        \end{figure}
+        これより、以下では波の振幅と速度の2点から考察を行う。
+        まず、振幅について。数値計算を行い、解として得られた$u_1$の値から各$\lambda$に対応する振幅の値を取り出した。なお、振幅の値には$u_t(x, t)$の最大値を取り出した。結果は図\ref{amp}の通りとなった。
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=10cm]{../report2/code/pic/ampletude_lambda_dep.png}
+          \caption{振幅の$\lambda$依存性}
+          \label{amp}
+        \end{figure}
+
+        なお、この結果に対してこの分布が直線であることを確認するためにscipyのcurve\_fit関数を用いて直線近似を行った。得られた結果はほぼ直線であると言える。また、この結果は式(\ref{eq_soliton})から振幅が$\lambda$に比例するという解釈と一致する。(分母の$\cosh$関数は位置座標を含むため、$\lambda$の定義域と位置座標の双方を考慮すれば$\cosh$の最小値は変化しないと見ている。)
+
+        また、図\ref{amp}で結果の点と直線がややずれている原因は振幅の取得にnumpyのnp.max()を使用しており、厳密な振幅の値ではないためである。今回は誤差の判定までは出来ていない。
+
+        次に速度の$\lambda$依存性を求めた。KdV方程式から、速度$v(x, t)$が
+        \begin{align}
+          v(x, t) = -\sigma u(x, t)\frac{\partial u(x, t)}{\partial x} - \frac{\partial^3 u(x, t)}{\partial x^3} \label{eq_vt}
+        \end{align}
+        となり、かつ波の振幅が変化しないことから、今回は$x=2.0$かつ全ての時間における速度の最大値を取り出し速度の$\lambda$依存性を求めた。結果は図\ref{vt}の通りである。また、これはソリトンの式を式(\ref{eq_vt})に代入し解いた結果、$v(x, t)$が$\lambda^{5/2}$に依存することと一致する。
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=10cm]{../report2/code/pic/velocity_lambda_dep.png}
+          \caption{速度の$\lambda$依存性}
+          \label{}
+        \end{figure}
+        ただし、上記のグラフを見ても分かる通り、厳密には正しくない。これは$v(x, t)$のが$\tanh$関数を含むためである。
+
+  \item 2ソリトン解について、初期条件を
+        \begin{align}
+          u_2(x; x_0, \lambda, x_0', \lambda')=u_1(x; x_0, \lambda) + u_2(x; x_0', \lambda')
+        \end{align}
+        と近似することにより数値計算を実行する。結果の出力を\href{https://github.com/eri61/computer_physics/blob/14950abad1236061aca284cfe7e84c19b70c081b/submit/report2/out/solve_two_soliton.gif}{two\_soliton\_gif(クリック)}に置いた。なお、この解を求めたコードは下記コードリンクの2．に記している。
+        速度の異なる2つの波は衝突後、形、速度を保ったまま進行することが分かる。
+
+\end{enumerate}
+\Large コードリンク
+\normalsize
+\begin{enumerate}
+  \item \href{https://github.com/eri61/computer_physics/blob/main/submit/report2/code/report2_pr1.ipynb}{[2](1)のコード}
+  \item \href{https://github.com/eri61/computer_physics/blob/6478851b2b60323078073526861c761479416ca9/submit/report2/code/report2_pr2.ipynb}{[2](2)のコード}
+  \item \href{https://github.com/eri61/computer_physics/blob/main/submit/report2/code/differential.py}{微分演算子作成用のコード}
+  \item \href{https://github.com/eri61/computer_physics/blob/6478851b2b60323078073526861c761479416ca9/submit/report2/code/equation.py}{関数定義用のコード}
+\end{enumerate}
+\end{document}
