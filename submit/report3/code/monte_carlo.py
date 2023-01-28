@@ -3,7 +3,7 @@
 
 
 import numpy as np
-from mesurement import measure
+from mesurement import entropy, measure, specific_heat
 from supplement import mc_init, sweep
 
 
@@ -12,7 +12,8 @@ def calc_mc(
     J:float, 
     beta:float, 
     n_mc:float, 
-    seed:int=1
+    seed:int=1,
+    h:float=0
     ):
     """MC計算を行うメインコード
 
@@ -33,14 +34,17 @@ def calc_mc(
     for _ in range(n_bin):
         quant_bin = []  # 測定データを入れるリスト
         for _ in range(n_measure):
-            sweep(mc_data)  # スイープ
+            sweep(mc_data, h)  # スイープ
             quant_bin.append(measure(mc_data))  # 測定
         quant.append(np.array(quant_bin).mean(axis=0))  # ビン内で平均
     quant = np.array(quant)
     print(f"  obtained data shape: {quant.shape}")
 
-    quant /= mc_data.state.size  # サイトあたり
-    quant_mean = quant.mean(axis=0)  # ビンごとに平均化
-    quant_std = quant.std(axis=0)  # 標準偏差
-    return quant_mean, quant_std
+    quant /= mc_data.state.size                             # サイトあたり
+    quant_mean = quant.mean(axis=0)                         # ビンごとに平均化
+    S_Nk = entropy(quant_mean)
+    C_Nk = specific_heat(quant_mean, beta)
+    quant_std = quant.std(axis=0)                           # 標準偏差
+    
+    return np.array([quant_mean, quant_std, S_Nk, C_Nk]).reshape(-1, 4)
 

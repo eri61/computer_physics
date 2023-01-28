@@ -67,7 +67,7 @@ def gen_indices_nn(system):
     return indices_nn
     
 # スウィープを行う関数
-def sweep(_mc):
+def sweep(_mc, h:float=0):
     state = _mc.state
 
     # 事前に必要な数だけ乱数を生成しておく
@@ -76,7 +76,7 @@ def sweep(_mc):
 
     # 全てのスピンを1回づつランダムにスイープ
     for i, rand in zip(sites, randn):
-        p = prob_flip(_mc, i)  # 更新確率
+        p = prob_flip(_mc, i, h)  # 更新確率
         if accept(p, rand):  # 更新をするかどうか
             flip(state, i)  # 更新
 
