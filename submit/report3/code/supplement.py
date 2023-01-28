@@ -79,6 +79,7 @@ def sweep(_mc, h:float=0):
         p = prob_flip(_mc, i, h)  # 更新確率
         if accept(p, rand):  # 更新をするかどうか
             flip(state, i)  # 更新
+        # ここのデータ→変化
 
 # サイトiのスピンを反転
 def flip(_state, i):

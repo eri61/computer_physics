@@ -46,8 +46,9 @@ def main(
     nt = 10,            # 温度点の数
     n_measure = 1000,   # ビンあたりの測定回数
     n_bin = 10,         # ビンの数
-    n_warmup = 100,      # ウォームアップの回数
-    h:float = 0
+    n_warmup = 100,     # ウォームアップの回数
+    h:float = 0,        # 印加磁場
+    J:float = 1.
 ):
     ts = np.linspace(tmin, tmax, nt)  # 温度メッシュ
 
@@ -57,7 +58,7 @@ def main(
         print("\n================")
         print(f"T = {t}")
         n_mc = (n_bin, n_measure, n_warmup)
-        data = calc_mc(system, J=1, beta=1/t, n_mc=n_mc, h=h)  # MC計算
+        data = calc_mc(system, J=J, beta=1/t, n_mc=n_mc, h=h)  # MC計算
         qs = np.vstack([qs, data])  # 結果をリストqsに追加
 
     print("\n================")
