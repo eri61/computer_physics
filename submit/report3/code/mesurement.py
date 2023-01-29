@@ -43,7 +43,7 @@ def prob_flip(_mc, i, h):
     num_up = np.count_nonzero(state_nn)  # 最近接サイトのアップスピンの数
 
     # probability at h
-    prob_field = np.exp(-h * measure(_mc))
+    prob_field = np.exp(h * measure(_mc))
 
     if state[i]:  # spin up
         return _mc.prob_up[num_up] * prob_field
