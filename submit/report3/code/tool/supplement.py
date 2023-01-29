@@ -4,7 +4,8 @@
 from collections import namedtuple
 
 import numpy as np
-from mesurement import prob_flip
+
+from .measurement import prob_flip
 
 MC = namedtuple('MC', ['state', 'indices_nn', 'rng', 'prob_up', 'prob_dn'])
 """
@@ -67,7 +68,7 @@ def gen_indices_nn(system):
     return indices_nn
     
 # スウィープを行う関数
-def sweep(_mc, h:float=0):
+def sweep(_mc, h:float=0, beta:float=1.):
     state = _mc.state
 
     # 事前に必要な数だけ乱数を生成しておく
@@ -76,7 +77,7 @@ def sweep(_mc, h:float=0):
 
     # 全てのスピンを1回づつランダムにスイープ
     for i, rand in zip(sites, randn):
-        p = prob_flip(_mc, i, h)  # 更新確率
+        p = prob_flip(_mc, i, h, beta)  # 更新確率
         if accept(p, rand):  # 更新をするかどうか
             flip(state, i)  # 更新
         # ここのデータ→変化

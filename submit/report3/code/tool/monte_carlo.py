@@ -1,11 +1,18 @@
 # !python 3.10.6
 # REFERENCE: code of Prof. OTSUKI
 
+import logging
 
 import numpy as np
-from mesurement import entropy, measure, specific_heat
-from supplement import mc_init, sweep
 
+from .measurement import entropy, measure, specific_heat
+from .supplement import mc_init, sweep
+
+# ログの出力名を設定（1）
+logger = logging.getLogger('LoggingTest')
+ 
+# ログをコンソール出力するための設定（2）
+sh = logging.StreamHandler()
 
 def calc_mc(
     system: tuple, 
@@ -26,19 +33,20 @@ def calc_mc(
     """
     n_bin, n_measure, n_warmup = n_mc
 
-    print("Initializing MC...")
+    logger.debug("Initializing MC...")
     mc_data = mc_init(system, J, beta, seed)
 
-    print("Warming up...")
+    logger.debug("Warming up...")
     quant = []  # 各ビンごとの結果を入れるリスト
     for _ in range(n_bin):
         quant_bin = []  # 測定データを入れるリスト
         for _ in range(n_measure):
-            sweep(mc_data, h)  # スイープ
+            sweep(mc_data, h, beta)  # スイープ
             quant_bin.append(measure(mc_data))  # 測定
         quant.append(np.array(quant_bin).mean(axis=0))  # ビン内で平均
     quant = np.array(quant)
-    print(f"  obtained data shape: {quant.shape}")
+    logger.debug(f"  obtained data shape: {quant.shape}")
+    print(".", end="")
 
     quant /= mc_data.state.size                             # サイトあたり
     quant_mean = quant.mean(axis=0)                         # ビンごとに平均化
